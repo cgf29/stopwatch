@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Document</title>
+    <style>
+        a {
+            text-decoration: none;
+        }
+
+        .header {
+            margin-top: 30px;
+            color: #ffffff;
+            min-height: 50px;
+            font-family: 'Heebo', sans-serif;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .header__type {
+            font-family: 'Heebo', sans-serif;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 10px 22px;
+        }
+
+        .active-type {
+            background-color: #6f6f6f;
+            border-radius: 30px;
+        }
+
+        .container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #9B9999;
+            height: 100vh;
+            width: 100vw;
+            box-sizing: border-box;
+        }
+
+        .main {
+            height: 100%;
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 70px;
+        }
+
+        .main__counter {
+            min-width: 280px;
+            text-align: center;
+            font-size: 70px;
+            font-family: 'Heebo', sans-serif;
+        }
+
+        .button {
+            background-color: #2d855b;
+            border-radius: 30px;
+            border: 2px solid #ffffff;
+            display: inline-block;
+            cursor: pointer;
+            color: #ffffff;
+            font-family: Arial;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 13px 31px;
+            text-decoration: none;
+            transition: 0.5s ease;
+        }
+
+        .button:hover {
+            background-color: #0e3a2a;
+        }
+
+        .numbers {
+            display: inline-block;
+            width: 80px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header__left">
+                <span>By</span><a href="https://github.com/cgf29">&nbsp;&nbsp;cgf</a>
+            </div>
+            <div class="header__right">
+                <div class="header__types">
+                    <span class="header__type active-type">Digits</span>
+                    <span class="header__type">Arrows (soon)</span>
+                </div>
+            </div>
+        </header>
+        <main class=" main">
+            <div class="main__counter">00:00:00</div>
+            <div class="main__buttons">
+                <button class="main__start button">start</button>
+                <button class="main__stop button">stop</button>
+                <button class="main__reset button">reset</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const counter = document.querySelector('.main__counter')
+        const startButton = document.querySelector('.main__start')
+        const stopButton = document.querySelector('.main__stop')
+        const resetButton = document.querySelector('.main__reset')
+
+        let miliseconds = 0
+        let seconds = 0
+        let minutes = 0
+        let interval
+        let isStarted = false
+
+        startButton.addEventListener('click', () => {
+            if (!isStarted) {
+                interval = setInterval(function () {
+                    if (seconds == 60) {
+                        seconds = 0
+                        minutes++
+                    } else if (miliseconds == 1000) {
+                        miliseconds = 0
+                        seconds++
+                    } else {
+                        miliseconds += 10
+                    }
+                    isStarted = true
+                    counter.innerHTML = '<span class="numbers">' + `${minutes < 10 ? '0' + minutes : minutes}` + '</span>' + ':' + '<span>' + `${seconds < 10 ? '0' + seconds : seconds}` + '</span>' + ':' + '<span class="numbers">' + String(miliseconds).slice(0, -1) + '</span>'
+                }, 10)
+            }
+        })
+
+        stopButton.addEventListener('click', () => {
+            clearInterval(interval)
+            isStarted = false
+        })
+
+        resetButton.addEventListener('click', () => {
+            clearInterval(interval)
+            isStarted = false
+            miliseconds = 0
+            seconds = 0
+            minutes = 0
+            counter.innerHTML = '<span>00</span>' + ':' + '<span>00</span>' + ':' + '<span>00</span>'
+        })
+    </script>
+</body>
+
+</html>
