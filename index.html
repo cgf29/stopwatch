@@ -63,7 +63,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-bottom: 70px;
+            /* margin-bottom: 70px; */
         }
 
         .main__counter {
@@ -97,6 +97,87 @@
             display: inline-block;
             width: 80px;
         }
+
+        [data-tab-content] {
+            display: none;
+        }
+
+        [data-tab-content].active {
+            display: block;
+        }
+
+        .arrows.active {
+            min-width: 350px;
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .arrows__watch {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 2px solid#000;
+            background-color: #FFA577;
+            position: relative;
+        }
+
+        .arrow {
+            width: 130px;
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: top left;
+            content: '';
+            display: block;
+            height: 1px;
+            transform: rotate(-90deg);
+            background: #000;
+        }
+
+        .zero {
+            transform: translate(148px, 15px);
+            width: 4px;
+            position: absolute;
+            content: '';
+            display: block;
+            height: 50px;
+            background: #000;
+        }
+
+        .three {
+            transform-origin: 0 0;
+            transform: translate(238px, 147px);
+            width: 50px;
+            position: absolute;
+            content: '';
+            display: block;
+            height: 4px;
+            background: #000;
+        }
+
+        .six {
+            transform: translate(148px, 238px);
+            width: 4px;
+            position: absolute;
+            content: '';
+            display: block;
+            height: 50px;
+            background: #000;
+        }
+
+        .nine {
+            transform: translate(15px, 148px);
+            width: 50px;
+            position: absolute;
+            content: '';
+            display: block;
+            height: 4px;
+            background: #000;
+        }
     </style>
 </head>
 
@@ -109,35 +190,132 @@
             <div class="header__right">
                 <div class="header__types">
                     <span class="header__type active-type">Digits</span>
-                    <span class="header__type">Arrows (soon)</span>
+                    <span class="header__type">Arrows</span>
                 </div>
             </div>
         </header>
-        <main class=" main">
-            <div class="main__counter">00:00:00</div>
-            <div class="main__buttons">
-                <button class="main__start button">start</button>
-                <button class="main__stop button">stop</button>
-                <button class="main__reset button">reset</button>
+        <main class="main">
+            <div data-tab-content class="digits active">
+                <div class="main__counter">00:00:00</div>
+                <div class="main__buttons">
+                    <button class="main__start button">start</button>
+                    <button class="main__stop button">stop</button>
+                    <button class="main__reset button">reset</button>
+                </div>
+            </div>
+            <div class="arrows" data-tab-content>
+                <div class="arrows__watch">
+                    <span class="zero"></span>
+                    <span class="three"></span>
+                    <span class="six"></span>
+                    <span class="nine"></span>
+                    <span class="arrow"></span>
+                    <audio id="audio" src="\C:\Users\vanya\Desktop\watch\02611.mp3" type="audio/mpeg" loop></audio>
+                </div>
+                <div class="arrows__buttons">
+                    <button class="arrows__start button">start</button>
+                    <button class="arrows__stop button">stop</button>
+                    <button class="arrows__reset button">reset</button>
+                </div>
             </div>
         </main>
+
     </div>
 
     <script>
+        const main = document.querySelector('.main')
         const counter = document.querySelector('.main__counter')
-        const startButton = document.querySelector('.main__start')
-        const stopButton = document.querySelector('.main__stop')
-        const resetButton = document.querySelector('.main__reset')
+        const startDigitsButton = document.querySelector('.main__start')
+        const stopDigitsButton = document.querySelector('.main__stop')
+        const resetDigitsButton = document.querySelector('.main__reset')
+        const startArrowsButton = document.querySelector('.arrows__start')
+        const stopArrowsButton = document.querySelector('.arrows__stop')
+        const resetArrowsButton = document.querySelector('.arrows__reset')
+        const types = document.querySelectorAll('.header__type')
+        const digits = document.querySelector('.digits')
+        const arrows = document.querySelector('.arrows')
+        const tabContent = document.querySelectorAll('[data-tab-content]')
+        const arrow = document.querySelector('.arrow')
+        const audio = document.querySelector('#audio')
 
         let miliseconds = 0
         let seconds = 0
         let minutes = 0
-        let interval
-        let isStarted = false
+        let digitsInterval
+        let arrowsInterval
+        let isDigitsStarted = false
+        let isArrowsStarted = false
+        let deg = -90
 
-        startButton.addEventListener('click', () => {
-            if (!isStarted) {
-                interval = setInterval(function () {
+
+
+        types.forEach(e => {
+            e.addEventListener('click', (e) => {
+                types.forEach(type => type.classList.remove('active-type'))
+                tabContent.forEach(content => {
+                    content.classList.remove('active')
+                })
+                if (e.target.textContent == 'Digits') {
+                    digits.classList.add('active')
+                } else if (e.target.textContent == 'Arrows') {
+                    arrows.classList.add('active')
+                }
+                e.target.classList.add('active-type')
+
+            })
+        })
+
+        // document.querySelector('.arrows__start  ').onclick = function () {
+        //     arrow.style.transform = `rotate(${deg}deg)`
+        //     deg += 6
+        //     rotate()
+        //     setTimeout(() => {
+        //         document.querySelector('#audio').play()
+        //     }, 1000);
+        // }
+
+        startArrowsButton.addEventListener('click', () => {
+            if (!isArrowsStarted) {
+                if (deg == -90) {
+                    arrow.style.transform = `rotate(${deg}deg)`
+                    deg += 6
+                }
+                setTimeout(() => {
+                    document.querySelector('#audio').play()
+                }, 1000);
+                arrowsInterval = setInterval(() => {
+                    arrow.style.transform = `rotate(${deg}deg)`
+                    deg += 6
+                }, 1000)
+            }
+        })
+
+        // startArrows = () => {
+        //     setInterval(() => {
+        //         arrow.style.transform = `rotate(${deg}deg)`
+        //         deg += 6
+        //     }, 1000)
+        // }
+
+        stopArrowsButton.addEventListener('click', () => {
+            clearInterval(arrowsInterval)
+            isArrowsStarted = false
+            document.querySelector('#audio').pause()
+        })
+
+        resetArrowsButton.addEventListener('click', () => {
+            clearInterval(arrowsInterval)
+            isArrowsStarted = false
+            deg = -90
+            arrow.style.transform = 'rotate(-90deg)'
+            audio.pause();
+            audio.currentTime = 0
+        })
+
+
+        startDigitsButton.addEventListener('click', () => {
+            if (!isDigitsStarted) {
+                digitsInterval = setInterval(function () {
                     if (seconds == 60) {
                         seconds = 0
                         minutes++
@@ -147,20 +325,20 @@
                     } else {
                         miliseconds += 10
                     }
-                    isStarted = true
+                    isDigitsStarted = true
                     counter.innerHTML = '<span class="numbers">' + `${minutes < 10 ? '0' + minutes : minutes}` + '</span>' + ':' + '<span>' + `${seconds < 10 ? '0' + seconds : seconds}` + '</span>' + ':' + '<span class="numbers">' + String(miliseconds).slice(0, -1) + '</span>'
                 }, 10)
             }
         })
 
-        stopButton.addEventListener('click', () => {
-            clearInterval(interval)
-            isStarted = false
+        stopDigitsButton.addEventListener('click', () => {
+            clearInterval(digitsInterval)
+            isDigitsStarted = false
         })
 
-        resetButton.addEventListener('click', () => {
-            clearInterval(interval)
-            isStarted = false
+        resetDigitsButton.addEventListener('click', () => {
+            clearInterval(digitsInterval)
+            isDigitsStarted = false
             miliseconds = 0
             seconds = 0
             minutes = 0
