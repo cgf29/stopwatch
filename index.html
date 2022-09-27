@@ -267,15 +267,6 @@
             })
         })
 
-        // document.querySelector('.arrows__start  ').onclick = function () {
-        //     arrow.style.transform = `rotate(${deg}deg)`
-        //     deg += 6
-        //     rotate()
-        //     setTimeout(() => {
-        //         document.querySelector('#audio').play()
-        //     }, 1000);
-        // }
-
         startArrowsButton.addEventListener('click', () => {
             if (!isArrowsStarted) {
                 if (deg == -90) {
@@ -289,15 +280,9 @@
                     arrow.style.transform = `rotate(${deg}deg)`
                     deg += 6
                 }, 1000)
+                isArrowsStarted = true
             }
         })
-
-        // startArrows = () => {
-        //     setInterval(() => {
-        //         arrow.style.transform = `rotate(${deg}deg)`
-        //         deg += 6
-        //     }, 1000)
-        // }
 
         stopArrowsButton.addEventListener('click', () => {
             clearInterval(arrowsInterval)
